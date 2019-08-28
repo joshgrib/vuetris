@@ -1,7 +1,7 @@
 <template>
   <div class='tetris-game'>
     <p>Board</p>
-    <svg 
+    <svg
       class='board'
       :style="{height: '100vh'}"
     >
@@ -40,7 +40,7 @@ export default {
     }
   },
   created () {
-    this.$store.commit('initState',this.board);
+    this.$store.commit('initState', this.board)
     this.$store.commit('createSquare')
   }
 }
