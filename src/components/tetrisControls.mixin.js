@@ -66,7 +66,12 @@ export default {
       })
     },
     hardDrop () {
-      console.warn('hardDrop: not implemented')
+      while (this.currentBlock.active) {
+        this.$store.commit('shiftCurrentBlock', {
+          rowDiff: 1,
+          colDiff: 0
+        })
+      }
     },
     softDrop () {
       this.$store.commit('shiftCurrentBlock', {
