@@ -1,6 +1,6 @@
 <template>
   <div id='app'>
-    <button @click='toggle'>Switch</button>
+    <button @click='toggle'>Toggle</button>
     <section v-if="tetris">
       <tetris-game />
     </section>

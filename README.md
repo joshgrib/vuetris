@@ -1,8 +1,15 @@
 # vuetris
 
+[Play it now](https://vuetris.web.app/)
+
 ## Project setup
 ```
-yarn install
+yarn
+```
+
+### Deploy
+```
+yarn deploy
 ```
 
 ### Compiles and hot-reloads for development
