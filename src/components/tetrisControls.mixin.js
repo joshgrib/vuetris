@@ -42,21 +42,37 @@ export default {
     },
     timer () {
       if (!this.paused) {
-        this.$store.commit('nextTick')
+        if (this.currentBlock.active) {
+          this.$store.commit('shiftCurrentBlock', {
+            rowDiff: 1,
+            colDiff: 0
+          })
+        } else {
+          this.$store.commit('createSquare')
+        }
       }
-      setTimeout(this.timer, this.$store.state.board.tickTimeMs)
+      setTimeout(this.timer, this.board.tickTimeMs)
     },
     moveLeft () {
-      console.warn('moveLeft: not implemented')
+      this.$store.commit('shiftCurrentBlock', {
+        rowDiff: 0,
+        colDiff: -1
+      })
     },
     moveRight () {
-      console.warn('moveRight: not implemented')
+      this.$store.commit('shiftCurrentBlock', {
+        rowDiff: 0,
+        colDiff: 1
+      })
     },
     hardDrop () {
       console.warn('hardDrop: not implemented')
     },
     softDrop () {
-      console.warn('softDrop: not implemented')
+      this.$store.commit('shiftCurrentBlock', {
+        rowDiff: 1,
+        colDiff: 0
+      })
     }
   }
 }

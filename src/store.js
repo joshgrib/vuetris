@@ -15,13 +15,17 @@ const getCoordArray = (centerCoord, shape) => {
   }
 }
 
-const isInBounds = (coords, board) => {
-  coords.map(([row, col]) => {
-    const rowInBounds = row >= 0 && row < board.height
-    const colInBounds = col >= 0 && col < board.width
-    const bothInBounds = rowInBounds && colInBounds
-    if (!bothInBounds) return false
-  })
+const isOpenPosition = (coords, cells) => {
+  for (let coord of coords) {
+    let [row, col] = coord
+    if (cells[row] === undefined) return false
+    if (cells[row][col] === undefined) return false
+    /* FIXME:
+    this will overwrite previous inactiveblocks, need to
+    somehow check if the block is colored and in a final
+    position to know if all coords are open
+     */
+  }
   return true
 }
 
@@ -39,16 +43,6 @@ const fillColor = (state, coords, color) => {
   })
 }
 
-const moveBlockDown = state => {
-  let coords = state.currentBlock.coords
-  let shiftedDown = coords.map(([row, col]) => [row + 1, col])
-  if (isInBounds(shiftedDown, state.board)) {
-    fillColor(state, coords, state.board.background)
-    state.currentBlock.coords = shiftedDown
-    fillColor(state, state.currentBlock.coords, state.currentBlock.color)
-  }
-}
-
 export default new Vuex.Store({
   state: {
     cells: [],
@@ -63,28 +57,21 @@ export default new Vuex.Store({
       active: false,
       color: 'red',
       coords: []
-    },
-    tickCount: 0
+    }
   },
   mutations: {
-    initState (state, { height, width, cellSize }) {
+    initState (state) {
       state.cells.length = 0
-      for (let i = 0; i < height; i++) {
+      for (let i = 0; i < state.board.height; i++) {
         let row = []
-        for (let j = 0; j < width; j++) {
+        for (let j = 0; j < state.board.width; j++) {
           row.push({
-            width: cellSize - 1,
-            height: cellSize - 1,
+            width: state.board.cellSize - 1,
+            height: state.board.cellSize - 1,
             fill: state.board.background
           })
         }
         state.cells.push(row)
-      }
-    },
-    nextTick (state) {
-      state.tickCount++
-      if (state.currentBlock.active) {
-        moveBlockDown(state)
       }
     },
     createSquare (state) {
@@ -94,11 +81,22 @@ export default new Vuex.Store({
       state.currentBlock.color = 'yellow'
       state.currentBlock.active = true
       fillColor(state, state.currentBlock.coords, state.currentBlock.color)
-    }
-  },
-  actions: {
-    nextTick ({ dispatch, commit, state }) {
-      commit('nextTick')
+    },
+    shiftCurrentBlock (state, { rowDiff, colDiff }) {
+      let newCoords = []
+      state.currentBlock.coords.map(([row, col]) => {
+        newCoords.push([row + rowDiff, col + colDiff])
+      })
+      if (isOpenPosition(newCoords, state.cells)) {
+        fillColor(state, state.currentBlock.coords, state.board.background)
+        state.currentBlock.coords = newCoords
+        fillColor(state, state.currentBlock.coords, state.currentBlock.color)
+      } else {
+        if (rowDiff === 1) {
+          // only set inactive if the block was trying to move down
+          state.currentBlock.active = false
+        }
+      }
     }
   }
 })

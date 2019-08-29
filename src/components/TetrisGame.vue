@@ -55,7 +55,7 @@ export default {
   name: 'TetrisGame',
   mixins: [tetrisControls],
   created () {
-    this.$store.commit('initState', this.board)
+    this.$store.commit('initState')
     this.registerKeydownListener()
   },
   computed: {
@@ -64,6 +64,9 @@ export default {
     },
     cells () {
       return this.$store.state.cells
+    },
+    currentBlock () {
+      return this.$store.state.currentBlock
     },
     boardStyle () {
       return {
