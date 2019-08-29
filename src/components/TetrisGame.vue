@@ -1,12 +1,11 @@
 <template>
   <div class='tetris-game'>
-    <p>Board</p>
     <svg
       class='board'
       :style="{height: '100vh'}"
     >
       <g
-        v-for="(row, rowIdx) in $store.state.cells"
+        v-for="(row, rowIdx) in cells"
         :key="`row-${rowIdx}`"
         :data-row-idx="rowIdx"
       >
@@ -28,20 +27,27 @@
 </template>
 
 <script>
+
 export default {
   name: 'TetrisGame',
-  data () {
-    return {
-      board: {
-        width: 10,
-        height: 20,
-        cellSize: 15
-      }
-    }
-  },
   created () {
     this.$store.commit('initState', this.board)
+    this.timer()
     this.$store.commit('createSquare')
+  },
+  computed: {
+    board () {
+      return this.$store.state.board
+    },
+    cells () {
+      return this.$store.state.cells
+    }
+  },
+  methods: {
+    timer () {
+      this.$store.commit('nextTick')
+      setTimeout(this.timer, this.$store.state.board.tickTimeMs)
+    }
   }
 }
 </script>
