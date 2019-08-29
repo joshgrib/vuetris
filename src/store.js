@@ -86,7 +86,6 @@ export default new Vuex.Store({
       if (state.currentBlock.active) {
         moveBlockDown(state)
       }
-      console.log(state.tickCount)
     },
     createSquare (state) {
       let centerPoint = [0, 0]
