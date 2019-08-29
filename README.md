@@ -37,3 +37,8 @@ yarn run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## TODO
+
+* [_] Finish basic game
+* [_] Set up firebase hosting & publishing
