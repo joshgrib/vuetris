@@ -39,11 +39,17 @@
       Soft drop<br><kbd>[down arrow]</kbd>
     </button>
     <hr>
-    <button @click="startGame">
+    <button
+      v-if="!started"
+      @click="startGame"
+    >
       Start<br><kbd>[space]</kbd>
     </button>
-    <button @click="pauseGame">
-      Pause<br><kbd>[p]</kbd>
+    <button
+      v-if="started"
+      @click="pauseGame"
+    >
+      {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
     </button>
   </div>
 </template>
