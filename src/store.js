@@ -17,8 +17,8 @@ const getCoordArray = (centerCoord, shape) => {
 
 const isInBounds = (coords, board) => {
   coords.map(([row, col]) => {
-    const rowInBounds = row > 0 && row <= board.height
-    const colInBounds = col > 0 && col <= board.width
+    const rowInBounds = row >= 0 && row < board.height
+    const colInBounds = col >= 0 && col < board.width
     const bothInBounds = rowInBounds && colInBounds
     if (!bothInBounds) return false
   })
@@ -27,6 +27,14 @@ const isInBounds = (coords, board) => {
 
 const fillColor = (state, coords, color) => {
   coords.map(([row, col]) => {
+    if (state.cells[row] === undefined) {
+      console.warn(`Unable to find row ${row}`)
+      return
+    }
+    if (state.cells[row][col] === undefined) {
+      console.warn(`Unable to find cell [${row}, ${col}]`)
+      return
+    }
     state.cells[row][col].fill = color
   })
 }
@@ -89,5 +97,9 @@ export default new Vuex.Store({
       fillColor(state, state.currentBlock.coords, state.currentBlock.color)
     }
   },
-  actions: {}
+  actions: {
+    nextTick ({ dispatch, commit, state }) {
+      commit('nextTick')
+    }
+  }
 })
