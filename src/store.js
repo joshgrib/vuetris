@@ -5,13 +5,44 @@ Vue.use(Vuex)
 
 const getCoordArray = (centerCoord, shape) => {
   let [row, col] = centerCoord
-  if (shape === 'square') {
-    return [
-      [row, col],
-      [row + 1, col],
-      [row, col + 1],
-      [row + 1, col + 1]
-    ]
+  switch (shape) {
+    case 'square':
+      return [
+        [row, col],
+        [row + 1, col],
+        [row, col + 1],
+        [row + 1, col + 1]
+      ]
+    case 'line':
+      return [
+        [row, col],
+        [row, col + 1],
+        [row, col + 2],
+        [row, col + 3]
+      ]
+    case 'z':
+      return [
+        [row, col],
+        [row, col + 1],
+        [row + 1, col + 1],
+        [row + 1, col + 2]
+      ]
+    case 's':
+      return [
+        [row, col],
+        [row, col + 1],
+        [row + 1, col],
+        [row + 1, col - 1]
+      ]
+    case 't':
+      return [
+        [row, col],
+        [row, col + 1],
+        [row - 1, col + 1],
+        [row + 1, col + 1]
+      ]
+    default:
+      console.warn(`Unsupported shape: ${shape}`)
   }
 }
 
@@ -81,10 +112,12 @@ export default new Vuex.Store({
       }
       state.score.rowsCleared = 0
     },
-    createSquare (state) {
+    createBlock (state) {
       const initCol = Math.floor((state.board.width - 1) / 2)
       let centerPoint = [0, initCol]
-      let coords = getCoordArray(centerPoint, 'square')
+      const shapes = ['square', 'line', 'z', 's', 't']
+      const newShape = shapes[state.score.blocksPlaced % shapes.length]
+      let coords = getCoordArray(centerPoint, newShape) // TODO: add other shapes
       state.currentBlock.coords = coords
       state.currentBlock.active = true
       fillColor(state, state.currentBlock.coords, state.currentBlock.color)

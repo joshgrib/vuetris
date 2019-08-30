@@ -44,7 +44,7 @@ export default {
       if (!this.started) {
         this.started = true
         this.timer()
-        this.$store.commit('createSquare')
+        this.$store.commit('createBlock')
       }
     },
     pauseGame () {
@@ -59,7 +59,7 @@ export default {
           })
         } else {
           this.$store.commit('clearFilledRows')
-          this.$store.commit('createSquare')
+          this.$store.commit('createBlock')
         }
       }
       setTimeout(this.timer, this.board.tickTimeMs)

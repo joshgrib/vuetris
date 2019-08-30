@@ -9,7 +9,7 @@
 - [x] Get blocks to drop to down the screen and stop when they hit something
 - [x] Add controls to move blocks
 - [ ] Detect when the game is lost
-- [ ] Add other block types
+- [x] Add other block types
 - [ ] Add controls to rotate blocks
 - [x] Detect full rows and remove them
 - [ ] Shift blocks down when a row is removed
