@@ -56,11 +56,12 @@ export default new Vuex.Store({
     },
     currentBlock: {
       active: false,
-      color: 'red',
+      color: 'orange',
       coords: []
     },
     score: {
-      rowsCleared: 0
+      rowsCleared: 0,
+      blocksPlaced: 0
     }
   },
   mutations: {
@@ -81,10 +82,10 @@ export default new Vuex.Store({
       state.score.rowsCleared = 0
     },
     createSquare (state) {
-      let centerPoint = [0, 0]
+      const initCol = Math.floor((state.board.width - 1) / 2)
+      let centerPoint = [0, initCol]
       let coords = getCoordArray(centerPoint, 'square')
       state.currentBlock.coords = coords
-      state.currentBlock.color = 'yellow'
       state.currentBlock.active = true
       fillColor(state, state.currentBlock.coords, state.currentBlock.color)
     },
@@ -100,6 +101,7 @@ export default new Vuex.Store({
       } else {
         if (rowDiff === 1) {
           // only set inactive if the block was trying to move down
+          state.score.blocksPlaced++
           state.currentBlock.active = false
           state.currentBlock.coords.map(([row, col]) => {
             state.cells[row][col].taken = true

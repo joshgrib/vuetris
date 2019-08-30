@@ -8,11 +8,15 @@
 - [x] Set up firebase hosting & publishing
 - [x] Get blocks to drop to down the screen and stop when they hit something
 - [x] Add controls to move blocks
+- [ ] Detect when the game is lost
+- [ ] Add other block types
 - [ ] Add controls to rotate blocks
 - [x] Detect full rows and remove them
 - [ ] Shift blocks down when a row is removed
 - [ ] Track score
 - [ ] Improve styling
+
+> Note: [this similar game](https://binaryify.github.io/vue-tetris/) has a cool style
 
 ## Project setup
 ```

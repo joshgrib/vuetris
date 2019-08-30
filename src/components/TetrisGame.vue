@@ -59,8 +59,9 @@
       Slower<br><kbd>[-]</kbd>
     </button>
     <hr>
-    <h4>Score</h4>
+    <h4>Score: {{ totalScore }}</h4>
     <p>Rows cleared: {{ score.rowsCleared }}</p>
+    <p>Blocks placed: {{ score.blocksPlaced }}</p>
   </div>
 </template>
 
@@ -86,6 +87,11 @@ export default {
     },
     score () {
       return this.$store.state.score
+    },
+    totalScore () {
+      const placementPoints = this.score.blocksPlaced * 10
+      const rowClearPoints = this.score.rowsCleared * 100
+      return placementPoints + rowClearPoints
     },
     boardStyle () {
       return {
