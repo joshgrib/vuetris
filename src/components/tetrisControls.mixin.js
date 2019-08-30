@@ -33,9 +33,11 @@ export default {
       })
     },
     startGame () {
-      this.started = true
-      this.timer()
-      this.$store.commit('createSquare')
+      if (!this.started) {
+        this.started = true
+        this.timer()
+        this.$store.commit('createSquare')
+      }
     },
     pauseGame () {
       this.paused = !this.paused
