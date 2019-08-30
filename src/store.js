@@ -119,6 +119,12 @@ export default new Vuex.Store({
           })
         }
       })
+    },
+    increaseTick (state) {
+      state.board.tickTimeMs = state.board.tickTimeMs * 1.25
+    },
+    decreaseTick (state) {
+      state.board.tickTimeMs = state.board.tickTimeMs * 0.75
     }
   }
 })

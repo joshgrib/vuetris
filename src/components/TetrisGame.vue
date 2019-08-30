@@ -51,6 +51,13 @@
     >
       {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
     </button>
+    <br>
+    <button @click="increaseGameSpeed">
+      Faster<br><kbd>[+]</kbd>
+    </button>
+    <button @click="decreaseGameSpeed">
+      Slower<br><kbd>[-]</kbd>
+    </button>
     <hr>
     <h4>Score</h4>
     <p>Rows cleared: {{ score.rowsCleared }}</p>

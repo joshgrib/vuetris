@@ -27,6 +27,14 @@ export default {
           case 'ArrowDown':
             this.softDrop()
             break
+          case 'Minus':
+            this.decreaseGameSpeed()
+            break
+          case 'Equal':
+            if (e.key === '+') {
+              this.increaseGameSpeed()
+            }
+            break
           default:
             console.warn('Unhandled keydown', e)
         }
@@ -81,6 +89,12 @@ export default {
         rowDiff: 1,
         colDiff: 0
       })
+    },
+    increaseGameSpeed () {
+      this.$store.commit('decreaseTick')
+    },
+    decreaseGameSpeed () {
+      this.$store.commit('increaseTick')
     }
   }
 }
