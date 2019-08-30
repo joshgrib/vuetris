@@ -20,6 +20,7 @@ const isOpenPosition = (coords, cells) => {
     let [row, col] = coord
     if (cells[row] === undefined) return false
     if (cells[row][col] === undefined) return false
+    if (cells[row][col].taken) return false
     /* FIXME:
     this will overwrite previous inactiveblocks, need to
     somehow check if the block is colored and in a final
@@ -68,7 +69,8 @@ export default new Vuex.Store({
           row.push({
             width: state.board.cellSize - 1,
             height: state.board.cellSize - 1,
-            fill: state.board.background
+            fill: state.board.background,
+            taken: false
           })
         }
         state.cells.push(row)
@@ -95,6 +97,9 @@ export default new Vuex.Store({
         if (rowDiff === 1) {
           // only set inactive if the block was trying to move down
           state.currentBlock.active = false
+          state.currentBlock.coords.map(([row, col]) => {
+            state.cells[row][col].taken = true
+          })
         }
       }
     }
