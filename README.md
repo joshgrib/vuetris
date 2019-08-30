@@ -6,10 +6,11 @@
 
 - [x] Set up game board
 - [x] Set up firebase hosting & publishing
-- [ ] Get blocks to drop to down the screen and stop when they hit something
-- [ ] Add controls to move blocks
+- [x] Get blocks to drop to down the screen and stop when they hit something
+- [x] Add controls to move blocks
 - [ ] Add controls to rotate blocks
-- [ ] Detect full rows and remove them
+- [x] Detect full rows and remove them
+- [ ] Shift blocks down when a row is removed
 - [ ] Track score
 - [ ] Improve styling
 
