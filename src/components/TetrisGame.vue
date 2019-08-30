@@ -51,6 +51,9 @@
     >
       {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
     </button>
+    <hr>
+    <h4>Score</h4>
+    <p>Rows cleared: {{ score.rowsCleared }}</p>
   </div>
 </template>
 
@@ -73,6 +76,9 @@ export default {
     },
     currentBlock () {
       return this.$store.state.currentBlock
+    },
+    score () {
+      return this.$store.state.score
     },
     boardStyle () {
       return {

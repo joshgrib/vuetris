@@ -58,6 +58,9 @@ export default new Vuex.Store({
       active: false,
       color: 'red',
       coords: []
+    },
+    score: {
+      rowsCleared: 0
     }
   },
   mutations: {
@@ -75,6 +78,7 @@ export default new Vuex.Store({
         }
         state.cells.push(row)
       }
+      state.score.rowsCleared = 0
     },
     createSquare (state) {
       let centerPoint = [0, 0]
@@ -102,6 +106,19 @@ export default new Vuex.Store({
           })
         }
       }
+    },
+    clearFilledRows (state) {
+      state.cells.map(row => {
+        const takenCells = row.filter(r => r.taken)
+        if (row.length === takenCells.length) {
+          state.score.rowsCleared++
+          // FIXME: remove the row and shift the rest down instead of just changing the color
+          row.map(c => {
+            c.taken = false
+            c.fill = 'lightgrey'
+          })
+        }
+      })
     }
   }
 })

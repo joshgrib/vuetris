@@ -50,6 +50,7 @@ export default {
             colDiff: 0
           })
         } else {
+          this.$store.commit('clearFilledRows')
           this.$store.commit('createSquare')
         }
       }
