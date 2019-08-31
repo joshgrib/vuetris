@@ -12,7 +12,7 @@
 - [x] Add other block types
 - [ ] Add controls to rotate blocks
 - [x] Detect full rows and remove them
-- [ ] Shift blocks down when a row is removed
+- [x] Shift blocks down when a row is removed
 - [ ] Track score
 - [ ] Improve styling
 

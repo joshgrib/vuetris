@@ -3,48 +3,64 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const getCoordArray = (centerCoord, shape) => {
-  let [row, col] = centerCoord
-  switch (shape) {
-    case 'square':
+const BLOCKS = [
+  {
+    name: 'square',
+    color: 'gold',
+    coords (row, col) {
       return [
         [row, col],
         [row + 1, col],
         [row, col + 1],
         [row + 1, col + 1]
       ]
-    case 'line':
+    }
+  }, {
+    name: 'line',
+    color: 'royalblue',
+    coords (row, col) {
       return [
         [row, col],
         [row, col + 1],
         [row, col + 2],
         [row, col + 3]
       ]
-    case 'z':
+    }
+  }, {
+    name: 'z',
+    color: 'crimson',
+    coords (row, col) {
       return [
         [row, col],
         [row, col + 1],
         [row + 1, col + 1],
         [row + 1, col + 2]
       ]
-    case 's':
+    }
+  }, {
+    name: 's',
+    color: 'orange',
+    coords (row, col) {
       return [
         [row, col],
         [row, col + 1],
         [row + 1, col],
         [row + 1, col - 1]
       ]
-    case 't':
+    }
+  }, {
+    name: 't',
+    color: 'rebeccapurple',
+    coords (row, col) {
       return [
         [row, col],
         [row, col + 1],
         [row - 1, col + 1],
         [row + 1, col + 1]
       ]
-    default:
-      console.warn(`Unsupported shape: ${shape}`)
+    }
   }
-}
+]
 
 const isOpenPosition = (coords, cells) => {
   for (let coord of coords) {
@@ -75,6 +91,53 @@ const fillColor = (state, coords, color) => {
   })
 }
 
+const getBlankRow = (state) => {
+  let row = []
+  for (let i = 0; i < state.board.width; i++) {
+    row.push({
+      width: state.board.cellSize - 1,
+      height: state.board.cellSize - 1,
+      fill: state.board.background,
+      taken: false
+    })
+  }
+  return row
+}
+
+const clearBoard = (state) => {
+  state.cells.length = 0
+  for (let i = 0; i < state.board.height; i++) {
+    const newRow = getBlankRow(state)
+    state.cells.push(newRow)
+  }
+}
+
+const getRandomInt = maxVal => {
+  return Math.floor(Math.random() * Math.floor(maxVal))
+}
+
+const clearRow = (state, rowIdx) => {
+  state.score.rowsCleared++
+  // FIXME: remove the row and shift the rest down instead of just changing the color
+  state.cells.map((row, idx) => {
+    if (idx === 0) {
+      row.map(c => {
+        c.taken = false
+        c.fill = state.board.background
+      })
+    } else if (idx >= rowIdx) {
+      row.map((c, cellIdx) => {
+        c.taken = state.cells[rowIdx - 1][cellIdx].taken
+        c.fill = state.cells[rowIdx - 1][cellIdx].fill
+      })
+    }
+  })
+  state.cells[rowIdx].map((cell, idx) => {
+    cell.taken = false
+    cell.fill = 'lightgrey'
+  })
+}
+
 export default new Vuex.Store({
   state: {
     cells: [],
@@ -97,28 +160,15 @@ export default new Vuex.Store({
   },
   mutations: {
     initState (state) {
-      state.cells.length = 0
-      for (let i = 0; i < state.board.height; i++) {
-        let row = []
-        for (let j = 0; j < state.board.width; j++) {
-          row.push({
-            width: state.board.cellSize - 1,
-            height: state.board.cellSize - 1,
-            fill: state.board.background,
-            taken: false
-          })
-        }
-        state.cells.push(row)
-      }
+      clearBoard(state)
       state.score.rowsCleared = 0
     },
     createBlock (state) {
       const initCol = Math.floor((state.board.width - 1) / 2)
-      let centerPoint = [0, initCol]
-      const shapes = ['square', 'line', 'z', 's', 't']
-      const newShape = shapes[state.score.blocksPlaced % shapes.length]
-      let coords = getCoordArray(centerPoint, newShape) // TODO: add other shapes
-      state.currentBlock.coords = coords
+      const idx = 0//getRandomInt(BLOCKS.length)
+      const newShape = BLOCKS[idx]
+      state.currentBlock.coords = newShape.coords(0, initCol)
+      state.currentBlock.color = newShape.color
       state.currentBlock.active = true
       fillColor(state, state.currentBlock.coords, state.currentBlock.color)
     },
@@ -143,17 +193,20 @@ export default new Vuex.Store({
       }
     },
     clearFilledRows (state) {
-      state.cells.map(row => {
+      let toClear = []
+      //TODO: just use normal array methods to filter/split whatever to do this
+      // instead of looping over each cell, the whole row can just be shifted
+      state.cells.map((row, idx) => {
         const takenCells = row.filter(r => r.taken)
         if (row.length === takenCells.length) {
-          state.score.rowsCleared++
-          // FIXME: remove the row and shift the rest down instead of just changing the color
-          row.map(c => {
-            c.taken = false
-            c.fill = 'lightgrey'
-          })
+          toClear.push(idx)
         }
       })
+      for(let idx of toClear) {
+        state.cells.splice(idx, 1)
+        const newRow = getBlankRow(state)
+        state.cells.unshift(newRow)
+      }
     },
     increaseTick (state) {
       state.board.tickTimeMs = state.board.tickTimeMs * 1.25

@@ -9,6 +9,7 @@
         :key="`row-${rowIdx}`"
         :data-row-idx="rowIdx"
       >
+        
         <rect
           v-for="(cell, colIdx) in row"
           v-bind="cell"
@@ -18,7 +19,7 @@
           :y="`${rowIdx * board.cellSize}`"
         >
           <title>
-            {{ JSON.stringify(cell) }}
+            {{ JSON.stringify({...cell, rowIdx, colIdx}) }}
           </title>
         </rect>
       </g>
