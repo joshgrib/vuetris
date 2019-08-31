@@ -213,6 +213,9 @@ export default new Vuex.Store({
     },
     decreaseTick (state) {
       state.board.tickTimeMs = state.board.tickTimeMs * 0.75
+    },
+    rotateCurrentBlock (state) {
+      console.warn('rotate not supported yet')
     }
   }
 })

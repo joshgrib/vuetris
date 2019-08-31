@@ -6,6 +6,9 @@ export default {
     }
   },
   methods: {
+    sendKeyCode (code, key) {
+      document.body.dispatch('keydown', { code, key })
+    },
     registerKeydownListener () {
       document.body.addEventListener('keydown', e => {
         switch (e.code) {
@@ -26,6 +29,9 @@ export default {
             break
           case 'ArrowDown':
             this.softDrop()
+            break
+          case 'KeyR':
+            this.rotateBlock()
             break
           case 'Minus':
             this.decreaseGameSpeed()
@@ -89,6 +95,9 @@ export default {
         rowDiff: 1,
         colDiff: 0
       })
+    },
+    rotateBlock () {
+      this.$store.commit('rotateCurrentBlock')
     },
     increaseGameSpeed () {
       this.$store.commit('decreaseTick')

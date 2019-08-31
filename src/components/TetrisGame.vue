@@ -25,38 +25,41 @@
       </g>
     </svg>
     <hr>
-    <button @click="hardDrop">
+    <button @click="sendKeyCode('ArrowUp')">
       Hard drop<br><kbd>[up arrow]</kbd>
     </button>
+    <button @click="sendKeyCode('KeyR')">
+      Rotate<br><kbd>[r]</kbd>
+    </button>
     <br>
-    <button @click="moveLeft">
+    <button @click="sendKeyCode('ArrowLeft')">
       Left<br><kbd>[left arrow]</kbd>
     </button>
-    <button @click="moveRight">
+    <button @click="sendKeyCode('ArrowRight')">
       Right<br><kbd>[right arrow]</kbd>
     </button>
     <br>
-    <button @click="softDrop">
+    <button @click="sendKeyCode('ArrowDown')">
       Soft drop<br><kbd>[down arrow]</kbd>
     </button>
     <hr>
     <button
       v-if="!started"
-      @click="startGame"
+      @click="sendKeyCode('Space')"
     >
       Start<br><kbd>[space]</kbd>
     </button>
     <button
       v-if="started"
-      @click="pauseGame"
+      @click="sendKeyCode('KeyP')"
     >
       {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
     </button>
     <br>
-    <button @click="increaseGameSpeed">
+    <button @click="sendKeyCode('Equal', '+')">
       Faster<br><kbd>[+]</kbd>
     </button>
-    <button @click="decreaseGameSpeed">
+    <button @click="sendKeyCode('Minus')">
       Slower<br><kbd>[-]</kbd>
     </button>
     <hr>
