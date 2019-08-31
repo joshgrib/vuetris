@@ -3,6 +3,18 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+/* rotation
+[
+  [0, -1], [0, 0], [0, 1], [0, 2]
+] => [
+  [-1, 0], [0, 0], [1, 0], [2, 0]
+] => [
+  [0, 1], [0, 0], [0, -1], [0, -2]
+] => [
+  [1, 0], [0, 0], [-1, 0], [-2, 0]
+] => (start)
+*/
+
 const BLOCKS = [
   {
     name: 'square',
@@ -89,12 +101,21 @@ const getRandomInt = maxVal => {
   return Math.floor(Math.random() * Math.floor(maxVal))
 }
 
-const getCurrentBlockCoords = state => {
-  const {shape, center} = state.currentBlock
-  const [rowDiff, colDiff] = center
-  return shape.coordMap.map(([row, col]) => {
-    return [row + rowDiff, col + colDiff]
+const rotate = (coordMap, count) => {
+  // FIXME: this 'flips' more than it 'rotates'
+  if (count === 0) return coordMap
+  let newCoords = coordMap.map(([row, col]) => {
+    return (count % 2) ? [col, row] : [(-col), (-row)]
   })
+  console.log({coordMap, newCoords})
+  return rotate(newCoords, count-1)
+}
+
+const getCurrentBlockCoords = state => {
+  const { shape, center, rotateCount } = state.currentBlock
+  const coordMap = rotate(shape.coordMap, rotateCount)
+  const [rowDiff, colDiff] = center
+  return coordMap.map(([row, col]) => [row + rowDiff, col + colDiff])
 }
 
 export default new Vuex.Store({
@@ -111,6 +132,7 @@ export default new Vuex.Store({
       active: false,
       color: 'orange',
       shape: undefined,
+      rotateCount: 0,
       center: []
     },
     score: {
@@ -148,10 +170,22 @@ export default new Vuex.Store({
         if (rowDiff === 1) {
           state.score.blocksPlaced++
           state.currentBlock.active = false
+          state.currentBlock.rotateCount = 0
           getCurrentBlockCoords(state).map(([row, col]) => {
             state.cells[row][col].taken = true
           })
         }
+      }
+    },
+    rotateCurrentBlock (state) {
+      if (!state.currentBlock.active) return
+      const { shape, center, rotateCount } = state.currentBlock
+      const [rowDiff, colDiff] = center
+      const newCoords = rotate(shape.coordMap, rotateCount + 1).map(([r, c]) => [r + rowDiff, c + colDiff])
+      if (isOpenPosition(newCoords, state.cells)) {
+        fillColor(state, getCurrentBlockCoords(state), state.board.background)
+        state.currentBlock.rotateCount++
+        fillColor(state, newCoords, state.currentBlock.color)
       }
     },
     clearFilledRows (state) {
@@ -174,10 +208,6 @@ export default new Vuex.Store({
     },
     decreaseTick (state) {
       state.board.tickTimeMs = state.board.tickTimeMs * 0.75
-    },
-    rotateCurrentBlock (state) {
-      if (!state.currentBlock.active) return
-      console.warn('rotate not yet implemented', state)
     }
   }
 })

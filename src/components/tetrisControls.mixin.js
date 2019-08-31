@@ -7,43 +7,28 @@ export default {
   },
   methods: {
     sendKeyCode (code, key) {
-      document.body.dispatch('keydown', { code, key })
+      document.body.dispatch('keydown', { code })
     },
     registerKeydownListener () {
       document.body.addEventListener('keydown', e => {
-        switch (e.code) {
-          case 'Space':
-            this.startGame()
-            break
-          case 'KeyP':
-            this.pauseGame()
-            break
-          case 'ArrowLeft':
-            this.moveLeft()
-            break
-          case 'ArrowRight':
-            this.moveRight()
-            break
-          case 'ArrowUp':
-            this.hardDrop()
-            break
-          case 'ArrowDown':
-            this.softDrop()
-            break
-          case 'KeyR':
-            this.rotateBlock()
-            break
-          case 'Minus':
-            this.decreaseGameSpeed()
-            break
-          case 'Equal':
-            if (e.key === '+') {
-              this.increaseGameSpeed()
-            }
-            break
-          default:
-            console.warn('Unhandled keydown', e)
+        const keyActions = {
+          'Space': this.startGame,
+          'KeyP': this.pauseGame,
+          'Space': this.startGame,
+          'KeyP': this.pauseGame,
+          'ArrowLeft': this.moveLeft,
+          'ArrowRight': this.moveRight,
+          'ArrowUp': this.hardDrop,
+          'ArrowDown': this.softDrop,
+          'KeyR': this.rotateBlock,
+          'Minus': this.decreaseGameSpeed,
+          'Equal': this.increaseGameSpeed
         }
+        if (!Object.keys(keyActions).includes(e.code)) {
+          console.warn('Unsupported keypress', e)
+          return
+        }
+        keyActions[e.code]()
       })
     },
     startGame () {

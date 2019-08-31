@@ -13,7 +13,7 @@
 - [ ] Add controls to rotate blocks
 - [x] Detect full rows and remove them
 - [x] Shift blocks down when a row is removed
-- [ ] Track score
+- [x] Track score
 - [ ] Improve styling
 
 > Note: [this similar game](https://binaryify.github.io/vue-tetris/) has a cool style

@@ -25,10 +25,7 @@
               'stroke-width': 2
             }"
           >
-            <title v-if="currentBlock.center[0] === rowIdx && currentBlock.center[1] === colIdx">
-              CENTER
-            </title>
-            <title v-else>
+            <title>
               {{ JSON.stringify({rowIdx, colIdx, ...cell}) }}
             </title>
           </rect>
@@ -36,43 +33,47 @@
       </svg>
     </section>
     <section class="controls">
-      <button @click="sendKeyCode('ArrowUp')">
-        Hard drop<br><kbd>[up arrow]</kbd>
-      </button>
-      <button @click="sendKeyCode('KeyR')">
-        Rotate<br><kbd>[r]</kbd>
-      </button>
-      <br>
-      <button @click="sendKeyCode('ArrowLeft')">
-        Left<br><kbd>[left arrow]</kbd>
-      </button>
-      <button @click="sendKeyCode('ArrowRight')">
-        Right<br><kbd>[right arrow]</kbd>
-      </button>
-      <br>
-      <button @click="sendKeyCode('ArrowDown')">
-        Soft drop<br><kbd>[down arrow]</kbd>
-      </button>
+      <article>
+        <button @click="sendKeyCode('ArrowUp')">
+          Hard drop<br><kbd>[up arrow]</kbd>
+        </button>
+        <button @click="sendKeyCode('KeyR')">
+          Rotate<br><kbd>[r]</kbd>
+        </button>
+        <br>
+        <button @click="sendKeyCode('ArrowLeft')">
+          Left<br><kbd>[left arrow]</kbd>
+        </button>
+        <button @click="sendKeyCode('ArrowRight')">
+          Right<br><kbd>[right arrow]</kbd>
+        </button>
+        <br>
+        <button @click="sendKeyCode('ArrowDown')">
+          Soft drop<br><kbd>[down arrow]</kbd>
+        </button>
+      </article>
       <hr>
-      <button
-        v-if="!started"
-        @click="sendKeyCode('Space')"
-      >
-        Start<br><kbd>[space]</kbd>
-      </button>
-      <button
-        v-else
-        @click="sendKeyCode('KeyP')"
-      >
-        {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
-      </button>
-      <br>l
-      <button @click="sendKeyCode('Equal', '+')">
-        Faster<br><kbd>[+]</kbd>
-      </button>
-      <button @click="sendKeyCode('Minus')">
-        Slower<br><kbd>[-]</kbd>
-      </button>
+      <article>
+        <button
+          v-if="!started"
+          @click="sendKeyCode('Space')"
+        >
+          Start<br><kbd>[space]</kbd>
+        </button>
+        <button
+          v-else
+          @click="sendKeyCode('KeyP')"
+        >
+          {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
+        </button>
+        <br>
+        <button @click="sendKeyCode('Equal')">
+          Faster<br><kbd>[=]</kbd>
+        </button>
+        <button @click="sendKeyCode('Minus')">
+          Slower<br><kbd>[-]</kbd>
+        </button>
+      </article>
     </section>
   </div>
 </template>
@@ -119,10 +120,15 @@ export default {
 .tetris-game {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: stretch;
   section {
     padding: 10px;
     border: 1px solid black;
+  }
+  .controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
   }
 }
 </style>
