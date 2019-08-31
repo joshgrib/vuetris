@@ -102,12 +102,8 @@ const getRandomInt = maxVal => {
 }
 
 const rotate = (coordMap, count) => {
-  // FIXME: this 'flips' more than it 'rotates'
   if (count === 0) return coordMap
-  let newCoords = coordMap.map(([row, col]) => {
-    return (count % 2) ? [(-col), (-row)] : [col, row]
-  })
-  console.log({ coordMap, newCoords })
+  let newCoords = coordMap.map(([row, col]) => [col, (-row)])
   return rotate(newCoords, count - 1)
 }
 

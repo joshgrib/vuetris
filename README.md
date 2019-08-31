@@ -14,7 +14,7 @@
 - [x] Detect full rows and remove them
 - [x] Shift blocks down when a row is removed
 - [x] Track score
-- [ ] Fix block rotation bugs
+- [x] Fix block rotation bugs
 - [ ] Fix collision bugs
 - [ ] Improve styling
 
