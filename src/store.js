@@ -105,10 +105,10 @@ const rotate = (coordMap, count) => {
   // FIXME: this 'flips' more than it 'rotates'
   if (count === 0) return coordMap
   let newCoords = coordMap.map(([row, col]) => {
-    return (count % 2) ? [col, row] : [(-col), (-row)]
+    return (count % 2) ? [(-col), (-row)] : [col, row]
   })
-  console.log({coordMap, newCoords})
-  return rotate(newCoords, count-1)
+  console.log({ coordMap, newCoords })
+  return rotate(newCoords, count - 1)
 }
 
 const getCurrentBlockCoords = state => {
@@ -137,7 +137,8 @@ export default new Vuex.Store({
     },
     score: {
       rowsCleared: 0,
-      blocksPlaced: 0
+      blocksPlaced: 0,
+      gameOver: false
     }
   },
   mutations: {
@@ -147,6 +148,10 @@ export default new Vuex.Store({
     },
     createBlock (state) {
       const initCol = Math.floor((state.board.width - 1) / 2)
+      if (state.cells[0][initCol].taken) {
+        state.score.gameOver = true
+        return
+      }
       const idx = getRandomInt(BLOCKS.length)
       const newShape = BLOCKS[idx]
       state.currentBlock.shape = newShape

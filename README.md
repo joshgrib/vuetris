@@ -8,12 +8,14 @@
 - [x] Set up firebase hosting & publishing
 - [x] Get blocks to drop to down the screen and stop when they hit something
 - [x] Add controls to move blocks
-- [ ] Detect when the game is lost
+- [x] Detect when the game is lost
 - [x] Add other block types
-- [ ] Add controls to rotate blocks
+- [x] Add controls to rotate blocks
 - [x] Detect full rows and remove them
 - [x] Shift blocks down when a row is removed
 - [x] Track score
+- [ ] Fix block rotation bugs
+- [ ] Fix collision bugs
 - [ ] Improve styling
 
 > Note: [this similar game](https://binaryify.github.io/vue-tetris/) has a cool style

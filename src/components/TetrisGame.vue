@@ -6,6 +6,9 @@
       <p>Blocks placed: {{ score.blocksPlaced }}</p>
     </section>
     <section class="board">
+      <p v-if="score.gameOver">
+        GAME OVER
+      </p>
       <svg :style="boardStyle">
         <g
           v-for="(row, rowIdx) in cells"

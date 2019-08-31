@@ -14,8 +14,6 @@ export default {
         const keyActions = {
           'Space': this.startGame,
           'KeyP': this.pauseGame,
-          'Space': this.startGame,
-          'KeyP': this.pauseGame,
           'ArrowLeft': this.moveLeft,
           'ArrowRight': this.moveRight,
           'ArrowUp': this.hardDrop,
@@ -42,18 +40,18 @@ export default {
       this.paused = !this.paused
     },
     timer () {
-      if (!this.paused) {
-        if (this.currentBlock.active) {
-          this.$store.commit('shiftCurrentBlock', {
-            rowDiff: 1,
-            colDiff: 0
-          })
-        } else {
-          this.$store.commit('clearFilledRows')
-          this.$store.commit('createBlock')
-        }
-      }
       setTimeout(this.timer, this.board.tickTimeMs)
+      if (this.paused) return
+      if (this.score.gameOver) return
+      if (this.currentBlock.active) {
+        this.$store.commit('shiftCurrentBlock', {
+          rowDiff: 1,
+          colDiff: 0
+        })
+      } else {
+        this.$store.commit('clearFilledRows')
+        this.$store.commit('createBlock')
+      }
     },
     moveLeft () {
       this.$store.commit('shiftCurrentBlock', {
