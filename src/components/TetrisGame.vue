@@ -1,71 +1,71 @@
 <template>
   <div class='tetris-game'>
-    <svg
-      class='board'
-      :style="boardStyle"
-    >
-      <g
-        v-for="(row, rowIdx) in cells"
-        :key="`row-${rowIdx}`"
-        :data-row-idx="rowIdx"
-      >
-        
-        <rect
-          v-for="(cell, colIdx) in row"
-          v-bind="cell"
-          :title="JSON.stringify(cell)"
-          :key="`col-${colIdx}`"
-          :x="`${colIdx * board.cellSize}`"
-          :y="`${rowIdx * board.cellSize}`"
+    <section class="score">
+      <h4>Score: {{ totalScore }}</h4>
+      <p>Rows cleared: {{ score.rowsCleared }}</p>
+      <p>Blocks placed: {{ score.blocksPlaced }}</p>
+    </section>
+    <section class="board">
+      <svg :style="boardStyle">
+        <g
+          v-for="(row, rowIdx) in cells"
+          :key="`row-${rowIdx}`"
+          :data-row-idx="rowIdx"
         >
-          <title>
-            {{ JSON.stringify({...cell, rowIdx, colIdx}) }}
-          </title>
-        </rect>
-      </g>
-    </svg>
-    <hr>
-    <button @click="sendKeyCode('ArrowUp')">
-      Hard drop<br><kbd>[up arrow]</kbd>
-    </button>
-    <button @click="sendKeyCode('KeyR')">
-      Rotate<br><kbd>[r]</kbd>
-    </button>
-    <br>
-    <button @click="sendKeyCode('ArrowLeft')">
-      Left<br><kbd>[left arrow]</kbd>
-    </button>
-    <button @click="sendKeyCode('ArrowRight')">
-      Right<br><kbd>[right arrow]</kbd>
-    </button>
-    <br>
-    <button @click="sendKeyCode('ArrowDown')">
-      Soft drop<br><kbd>[down arrow]</kbd>
-    </button>
-    <hr>
-    <button
-      v-if="!started"
-      @click="sendKeyCode('Space')"
-    >
-      Start<br><kbd>[space]</kbd>
-    </button>
-    <button
-      v-if="started"
-      @click="sendKeyCode('KeyP')"
-    >
-      {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
-    </button>
-    <br>
-    <button @click="sendKeyCode('Equal', '+')">
-      Faster<br><kbd>[+]</kbd>
-    </button>
-    <button @click="sendKeyCode('Minus')">
-      Slower<br><kbd>[-]</kbd>
-    </button>
-    <hr>
-    <h4>Score: {{ totalScore }}</h4>
-    <p>Rows cleared: {{ score.rowsCleared }}</p>
-    <p>Blocks placed: {{ score.blocksPlaced }}</p>
+          <rect
+            v-for="(cell, colIdx) in row"
+            v-bind="cell"
+            :title="JSON.stringify(cell)"
+            :key="`col-${colIdx}`"
+            :x="`${colIdx * board.cellSize}`"
+            :y="`${rowIdx * board.cellSize}`"
+          >
+            <title>
+              {{ JSON.stringify({rowIdx, colIdx, ...cell}) }}
+            </title>
+          </rect>
+        </g>
+      </svg>
+    </section>
+    <section class="controls">
+      <button @click="sendKeyCode('ArrowUp')">
+        Hard drop<br><kbd>[up arrow]</kbd>
+      </button>
+      <button @click="sendKeyCode('KeyR')">
+        Rotate<br><kbd>[r]</kbd>
+      </button>
+      <br>
+      <button @click="sendKeyCode('ArrowLeft')">
+        Left<br><kbd>[left arrow]</kbd>
+      </button>
+      <button @click="sendKeyCode('ArrowRight')">
+        Right<br><kbd>[right arrow]</kbd>
+      </button>
+      <br>
+      <button @click="sendKeyCode('ArrowDown')">
+        Soft drop<br><kbd>[down arrow]</kbd>
+      </button>
+      <hr>
+      <button
+        v-if="!started"
+        @click="sendKeyCode('Space')"
+      >
+        Start<br><kbd>[space]</kbd>
+      </button>
+      <button
+        v-else
+        @click="sendKeyCode('KeyP')"
+      >
+        {{ paused ? 'Resume' : 'Pause' }}<br><kbd>[p]</kbd>
+      </button>
+      <br>l
+      <button @click="sendKeyCode('Equal', '+')">
+        Faster<br><kbd>[+]</kbd>
+      </button>
+      <button @click="sendKeyCode('Minus')">
+        Slower<br><kbd>[-]</kbd>
+      </button>
+    </section>
   </div>
 </template>
 
@@ -106,3 +106,15 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.tetris-game {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  section {
+    padding: 10px;
+    border: 1px solid black;
+  }
+}
+</style>

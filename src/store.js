@@ -116,28 +116,6 @@ const getRandomInt = maxVal => {
   return Math.floor(Math.random() * Math.floor(maxVal))
 }
 
-const clearRow = (state, rowIdx) => {
-  state.score.rowsCleared++
-  // FIXME: remove the row and shift the rest down instead of just changing the color
-  state.cells.map((row, idx) => {
-    if (idx === 0) {
-      row.map(c => {
-        c.taken = false
-        c.fill = state.board.background
-      })
-    } else if (idx >= rowIdx) {
-      row.map((c, cellIdx) => {
-        c.taken = state.cells[rowIdx - 1][cellIdx].taken
-        c.fill = state.cells[rowIdx - 1][cellIdx].fill
-      })
-    }
-  })
-  state.cells[rowIdx].map((cell, idx) => {
-    cell.taken = false
-    cell.fill = 'lightgrey'
-  })
-}
-
 export default new Vuex.Store({
   state: {
     cells: [],
@@ -165,7 +143,7 @@ export default new Vuex.Store({
     },
     createBlock (state) {
       const initCol = Math.floor((state.board.width - 1) / 2)
-      const idx = 0//getRandomInt(BLOCKS.length)
+      const idx = getRandomInt(BLOCKS.length)
       const newShape = BLOCKS[idx]
       state.currentBlock.coords = newShape.coords(0, initCol)
       state.currentBlock.color = newShape.color
@@ -194,7 +172,7 @@ export default new Vuex.Store({
     },
     clearFilledRows (state) {
       let toClear = []
-      //TODO: just use normal array methods to filter/split whatever to do this
+      // TODO: just use normal array methods to filter/split whatever to do this
       // instead of looping over each cell, the whole row can just be shifted
       state.cells.map((row, idx) => {
         const takenCells = row.filter(r => r.taken)
@@ -202,7 +180,7 @@ export default new Vuex.Store({
           toClear.push(idx)
         }
       })
-      for(let idx of toClear) {
+      for (let idx of toClear) {
         state.cells.splice(idx, 1)
         const newRow = getBlankRow(state)
         state.cells.unshift(newRow)
@@ -215,7 +193,8 @@ export default new Vuex.Store({
       state.board.tickTimeMs = state.board.tickTimeMs * 0.75
     },
     rotateCurrentBlock (state) {
-      console.warn('rotate not supported yet')
+      if (!state.currentBlock.active) return
+      console.warn('rotate not yet implemented', state)
     }
   }
 })
