@@ -20,46 +20,24 @@
 
 > Note: [this similar game](https://binaryify.github.io/vue-tetris/) has a cool style
 
-## Project setup
-```
-yarn
-```
+## Quickstart
 
-### Deploy
-```
-yarn deploy
-```
+1. Clone the repo
+2. Run `yarn` to install dependencies
+3. Run `yarn serve` to start the dev server
+4. Navigate to the URL shown to play (most likely `localhost:8080`)
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+## Commands
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+* `yarn` - install dependencies
+* `yarn serve` - compiles and hot-reloads for development
+* `yarn deploy` - build for production and deploy to [Firebase](https://firebase.google.com/)
+* `yarn build` - compiles and minifies for production
+* `yarn lint` - lint and fix files
+* `yarn test` - run tests
+* `yarn test:e2e` - run end-to-end tests with [Cypress](https://www.cypress.io/)
+* `yarn test:unit` - run unit tests with [Jest](https://jestjs.io/)
 
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Run your end-to-end tests
-```
-yarn run test:e2e
-```
-
-### Run your unit tests
-```
-yarn run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
+> If you look in the `package.json` scripts you will see that there commands mostly run with 
+> the [Vue CLI](https://cli.vuejs.org/), the [configuration reference](https://cli.vuejs.org/config/)
+> has information and additional functionality
