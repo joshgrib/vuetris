@@ -19,8 +19,16 @@
             :key="`col-${colIdx}`"
             :x="`${colIdx * board.cellSize}`"
             :y="`${rowIdx * board.cellSize}`"
+            :style="{
+              ...cell.style,
+              stroke: currentBlock.center[0] === rowIdx && currentBlock.center[1] === colIdx ? 'black': '',
+              'stroke-width': 2
+            }"
           >
-            <title>
+            <title v-if="currentBlock.center[0] === rowIdx && currentBlock.center[1] === colIdx">
+              CENTER
+            </title>
+            <title v-else>
               {{ JSON.stringify({rowIdx, colIdx, ...cell}) }}
             </title>
           </rect>

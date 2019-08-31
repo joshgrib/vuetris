@@ -7,58 +7,31 @@ const BLOCKS = [
   {
     name: 'square',
     color: 'gold',
-    coords (row, col) {
-      return [
-        [row, col],
-        [row + 1, col],
-        [row, col + 1],
-        [row + 1, col + 1]
-      ]
-    }
+    coordMap: [[0, 0], [1, 0], [0, 1], [1, 1]]
   }, {
     name: 'line',
     color: 'royalblue',
-    coords (row, col) {
-      return [
-        [row, col],
-        [row, col + 1],
-        [row, col + 2],
-        [row, col + 3]
-      ]
-    }
+    coordMap: [[0, -1], [0, 0], [0, 1], [0, 2]]
   }, {
     name: 'z',
     color: 'crimson',
-    coords (row, col) {
-      return [
-        [row, col],
-        [row, col + 1],
-        [row + 1, col + 1],
-        [row + 1, col + 2]
-      ]
-    }
+    coordMap: [[0, -1], [0, 0], [1, 0], [1, 1]]
   }, {
     name: 's',
     color: 'orange',
-    coords (row, col) {
-      return [
-        [row, col],
-        [row, col + 1],
-        [row + 1, col],
-        [row + 1, col - 1]
-      ]
-    }
+    coordMap: [[0, 0], [0, 1], [1, 0], [1, -1]]
   }, {
     name: 't',
     color: 'rebeccapurple',
-    coords (row, col) {
-      return [
-        [row, col],
-        [row, col + 1],
-        [row - 1, col + 1],
-        [row + 1, col + 1]
-      ]
-    }
+    coordMap: [[0, 0], [0, 1], [0, -1], [1, 0]]
+  }, {
+    name: 'L',
+    color: 'blue',
+    coordMap: [[-1, 0], [0, 0], [1, 0], [1, 1]]
+  }, {
+    name: 'backL',
+    color: 'pink',
+    coordMap: [[-1, 0], [0, 0], [1, 0], [1, -1]]
   }
 ]
 
@@ -91,7 +64,7 @@ const fillColor = (state, coords, color) => {
   })
 }
 
-const getBlankRow = (state) => {
+const getBlankRow = state => {
   let row = []
   for (let i = 0; i < state.board.width; i++) {
     row.push({
@@ -104,7 +77,7 @@ const getBlankRow = (state) => {
   return row
 }
 
-const clearBoard = (state) => {
+const clearBoard = state => {
   state.cells.length = 0
   for (let i = 0; i < state.board.height; i++) {
     const newRow = getBlankRow(state)
@@ -114,6 +87,14 @@ const clearBoard = (state) => {
 
 const getRandomInt = maxVal => {
   return Math.floor(Math.random() * Math.floor(maxVal))
+}
+
+const getCurrentBlockCoords = state => {
+  const {shape, center} = state.currentBlock
+  const [rowDiff, colDiff] = center
+  return shape.coordMap.map(([row, col]) => {
+    return [row + rowDiff, col + colDiff]
+  })
 }
 
 export default new Vuex.Store({
@@ -129,7 +110,8 @@ export default new Vuex.Store({
     currentBlock: {
       active: false,
       color: 'orange',
-      coords: []
+      shape: undefined,
+      center: []
     },
     score: {
       rowsCleared: 0,
@@ -145,26 +127,28 @@ export default new Vuex.Store({
       const initCol = Math.floor((state.board.width - 1) / 2)
       const idx = getRandomInt(BLOCKS.length)
       const newShape = BLOCKS[idx]
-      state.currentBlock.coords = newShape.coords(0, initCol)
+      state.currentBlock.shape = newShape
+      state.currentBlock.center = [0, initCol]
       state.currentBlock.color = newShape.color
       state.currentBlock.active = true
-      fillColor(state, state.currentBlock.coords, state.currentBlock.color)
+      const coords = getCurrentBlockCoords(state)
+      fillColor(state, coords, state.currentBlock.color)
     },
     shiftCurrentBlock (state, { rowDiff, colDiff }) {
-      let newCoords = []
-      state.currentBlock.coords.map(([row, col]) => {
-        newCoords.push([row + rowDiff, col + colDiff])
+      const newCoords = getCurrentBlockCoords(state).map(([row, col]) => {
+        return [row + rowDiff, col + colDiff]
       })
       if (isOpenPosition(newCoords, state.cells)) {
-        fillColor(state, state.currentBlock.coords, state.board.background)
-        state.currentBlock.coords = newCoords
-        fillColor(state, state.currentBlock.coords, state.currentBlock.color)
+        fillColor(state, getCurrentBlockCoords(state), state.board.background)
+        state.currentBlock.center[0] += rowDiff
+        state.currentBlock.center[1] += colDiff
+        fillColor(state, getCurrentBlockCoords(state), state.currentBlock.color)
       } else {
+        // only set inactive if the block was trying to move down
         if (rowDiff === 1) {
-          // only set inactive if the block was trying to move down
           state.score.blocksPlaced++
           state.currentBlock.active = false
-          state.currentBlock.coords.map(([row, col]) => {
+          getCurrentBlockCoords(state).map(([row, col]) => {
             state.cells[row][col].taken = true
           })
         }
@@ -172,8 +156,6 @@ export default new Vuex.Store({
     },
     clearFilledRows (state) {
       let toClear = []
-      // TODO: just use normal array methods to filter/split whatever to do this
-      // instead of looping over each cell, the whole row can just be shifted
       state.cells.map((row, idx) => {
         const takenCells = row.filter(r => r.taken)
         if (row.length === takenCells.length) {
@@ -182,6 +164,7 @@ export default new Vuex.Store({
       })
       for (let idx of toClear) {
         state.cells.splice(idx, 1)
+        state.score.rowsCleared++
         const newRow = getBlankRow(state)
         state.cells.unshift(newRow)
       }
